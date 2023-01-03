@@ -24,6 +24,7 @@ const getTinyUrl = async (req, res) => {
   try {
     const url = await tinyUrlService.getTinyUrl(tinyUrl);
     console.log("getTinyUrl: " + url);
+    
     if (url === null) {
       return res.sendStatus(404);
     }
