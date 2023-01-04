@@ -3,7 +3,7 @@ class NotFoundError extends Error {
         super();
         this.message = message;
         this.name = "NotFoundError";
-        this.code = 404;
+        this.statusCode = 404;
     }
 };
 exports.NotFoundError = NotFoundError;

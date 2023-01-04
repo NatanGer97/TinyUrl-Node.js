@@ -45,11 +45,12 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/tinyurl', tinyUrlRouter);
 app.use('/auth', authRouter);
+app.use(errorHandler);
 
 app.all('*', (req, res) => {
-  return res.send('404').send('Page not found');
+  return res.status(404).send('Page not found');
 });
 
-app.use(errorHandler);
+
 
 module.exports = app;
