@@ -1,12 +1,14 @@
 class UserOut {
     id;
-    name;
+    firsName;
+    lastName;
     email;
       constructor(user)
     {
       this.email = user.email;
       this.id = user._id;
-      this.name = user.name;
+      this.firstName = user.firstName;
+      this.lastName = user.lastName;
       
     }
   }

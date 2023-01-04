@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const registerController = require("../controllers/RegisterController");
-const { validateUserInput } = require("../middleware/UserInputValidation");
+const { validateUserInput } = require("../middlewares/UserInputValidation");
 
 router.post("/register", validateUserInput, registerController.createNewUser);
 

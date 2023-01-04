@@ -1,13 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../swagger.json');
-router.use('/api-docs', swaggerUi.serve);
-router.get('/api-docs', swaggerUi.setup(swaggerDocument));
+const userController = require('../controllers/UsersController');
 
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+router.get("/all", userController.getUsers);
+router.get('/findByName', userController.getUser);
+router.get('/findById/:id', userController.getUserById);
+
 
 module.exports = router;

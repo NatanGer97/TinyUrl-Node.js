@@ -14,7 +14,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const tinyUrlRouter = require('./routes/tinyUrl');
 const authRouter = require('./routes/auth');
-const errorHandler = require('./middleware/ErrorHandler');
+const errorHandler = require('./middlewares/ErrorHandler');
 var options = {
     explorer: true
   };
@@ -47,7 +47,7 @@ app.use('/tinyurl', tinyUrlRouter);
 app.use('/auth', authRouter);
 
 app.all('*', (req, res) => {
-  res.send('404').send('Page not found');
+  return res.send('404').send('Page not found');
 });
 
 app.use(errorHandler);
