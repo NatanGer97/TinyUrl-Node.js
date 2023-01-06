@@ -4,6 +4,8 @@ const redisService = require("../services/RedisService");
 const { getDateMonthAndYear } = require("../utils/DateUtil");
 const UserService = require("../services/UserService");
 
+const BASE_URL_MS = process.env.BASE_URL_MS
+
 function createTinyUrl(url, email) {
   let tinyCode = generateTinyCode();
   let tryCounter = 0;
@@ -38,13 +40,9 @@ async function addNewClick(tinyCode, email) {
       return response.data;
     }
     throw response;
-    
-    
-  }catch (error) {
+  } catch (error) {
     console.log("cant add new click to tiny url: " + tinyCode);
     console.log("Axios error: " + error.message);
-    
-    
   }
 }
 
@@ -125,11 +123,13 @@ function getTinyUrl(tinyCode) {
   return redisService.get(tinyCode);
 }
 
-const getAllClicks = async (email) => {
-  const STATISTICS_MICROSERVICE_URL = `http://localhost:8080/api/tinyClicks/${email}`;
+const getAllClicks = async (email, pageNum, pageSize) => {
+  const MS_URL = BASE_URL_MS + `/tinyClicks/${email}?pageNumber=${pageNum}&pageSize=${pageSize}`
+  // const STATISTICS_MICROSERVICE_URL = `http://localhost:8080/api/tinyClicks/${email}?pageNum=${pageNum}&pageSize=${pageSize}`;
+  
 
   try {
-    const response = await axios.get(STATISTICS_MICROSERVICE_URL);
+    const response = await axios.get(MS_URL);
     if (response.status === 200 && response.data !== null) {
       return response.data;
     }
@@ -137,8 +137,8 @@ const getAllClicks = async (email) => {
   } catch (error) {
     console.log("cant get all clicks for user: " + email);
     console.log("Axios error: " + error.message);
+    throw error;
   }
-
 };
 
 module.exports = {

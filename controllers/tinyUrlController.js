@@ -53,15 +53,19 @@ const getTinyUrl = async (req, res, next) => {
     // return res.status(200).json({ url: originalUrl });
   } catch (error) {
     console.log("error 1" + error);
-    
+
     return res.status(500).json({ error: error.message });
   }
 };
 
-const getAllClicks = async(req, res) => {
-  const { email } = req.query;
+const getAllClicks = async (req, res) => {
+  const { email, pageNumber = 0, pageSize = 1 } = req.query;
   try {
-    const tinyClicks = await tinyUrlService.getAllClicks(email);
+    const tinyClicks = await tinyUrlService.getAllClicks(
+      email,
+      pageNumber,
+      pageSize
+    );
     console.log("tinyClicks: " + tinyClicks);
     res.status(200).json(tinyClicks);
   } catch (error) {
