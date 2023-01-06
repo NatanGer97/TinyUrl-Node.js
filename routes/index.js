@@ -11,6 +11,7 @@ const tinyUrlController = require('../controllers/tinyUrlController');
 router.get("/home", (req, res) => {
   res.send("Welcome to TinyUrl API");
 });
+
 router.get('/:tinyUrl', tinyUrlController.getTinyUrl);
 
 

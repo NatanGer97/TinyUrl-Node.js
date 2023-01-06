@@ -6,7 +6,7 @@ exports.set = async (key, value) => {
     const res = await redisClient.setNX(key, value);
     return res;
   } catch (error) {
-    console.log(error);
+    console.log("redis error: " + error);
   } finally {
     redisClient.disconnect();
   }
@@ -14,6 +14,7 @@ exports.set = async (key, value) => {
 
 exports.get = async (key) => {
   try {
+    
     await redisClient.connect();
     const value = await redisClient.get(key);
     return value;

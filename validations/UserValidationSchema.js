@@ -17,3 +17,8 @@ module.exports.UserLoginValidationSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(4).required(),
 });
+
+module.exports.tinyUrlRequestValidationSchema = Joi.object({
+  url: Joi.string().required(),
+  email: Joi.string().email().required(),
+});

@@ -62,3 +62,12 @@ exports.getUsers = async () => {
   } 
 
 };
+
+exports.addTinyCodeToUser = async (email, tinyCode) => {
+  const results = await UserModel.findOneAndUpdate({email: email}, {$push: {tinyCodes: tinyCode}}).exec();
+  if (results) {
+    console.log("added tinyCode to user");
+    return results;
+  }
+  throw new Error("error adding tinyCode to user");
+};
