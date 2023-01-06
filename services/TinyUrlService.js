@@ -4,7 +4,7 @@ const redisService = require("../services/RedisService");
 const { getDateMonthAndYear } = require("../utils/DateUtil");
 const UserService = require("../services/UserService");
 
-const BASE_URL_MS = process.env.BASE_URL_MS
+const BASE_URL_MS = process.env.BASE_URL_MS;
 
 function createTinyUrl(url, email) {
   let tinyCode = generateTinyCode();
@@ -30,9 +30,9 @@ function createTinyUrl(url, email) {
   return process.env.BASE_URL + tinyCode + "/";
 }
 
-async function addNewClick(tinyCode, email) {
+async function addNewClick(tinyCode, email, originalUrl) {
   const STATISTICS_MICROSERVICE_URL = "http://localhost:8080/api/tinyClick";
-  const body = { tinyCode: tinyCode, email };
+  const body = { tinyCode: tinyCode, email, originalUrl };
   try {
     const response = await axios.post(STATISTICS_MICROSERVICE_URL, body);
 
@@ -123,10 +123,11 @@ function getTinyUrl(tinyCode) {
   return redisService.get(tinyCode);
 }
 
-const getAllClicks = async (email, pageNum, pageSize) => {
-  const MS_URL = BASE_URL_MS + `/tinyClicks/${email}?pageNumber=${pageNum}&pageSize=${pageSize}`
+const getAllClicksOfUser = async (email, pageNum, pageSize) => {
+  let MS_URL =
+    BASE_URL_MS +
+    `/tinyClicks/${email}?pageNumber=${pageNum}&pageSize=${pageSize}`;
   // const STATISTICS_MICROSERVICE_URL = `http://localhost:8080/api/tinyClicks/${email}?pageNum=${pageNum}&pageSize=${pageSize}`;
-  
 
   try {
     const response = await axios.get(MS_URL);
@@ -141,6 +142,22 @@ const getAllClicks = async (email, pageNum, pageSize) => {
   }
 };
 
+const getAllClicksOfUserFromCassandra = async (email) => {
+  const url = BASE_URL_MS + `/clicks` + `?userName=${email}`
+  console.log(url);
+  try {
+    const response = await axios.get(url);
+    if (response.status === 200 && response.data !== null) {
+      return response.data;
+    }
+    throw response;
+  } catch (error) {
+    console.log("cant get all clicks for user from cassandra: " + email);
+    console.log("Axios error: " + error.message);
+    throw error;
+  }
+};
+
 module.exports = {
   createTinyUrl,
   getTinyUrl,
@@ -148,5 +165,6 @@ module.exports = {
   updateTinyUrlClicks,
   updateDic,
   addNewClick,
-  getAllClicks,
+  getAllClicksOfUser,
+  getAllClicksOfUserFromCassandra,
 };

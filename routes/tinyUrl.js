@@ -8,7 +8,8 @@ const CatchAsync = require('../utils/CatchAsync');
 
 
 router.post('/create', tinyUrlRequestValidation, CatchAsync(tinyUrlController.createTinyUrl));
-router.get('/all', tinyUrlController.getAllClicks);
+router.get('/all', tinyUrlController.getAllClicksOfUser);
+router.get('/cassandra/all', tinyUrlController.getAllClicksFromCassandra);
 
 
 module.exports = router;

@@ -45,7 +45,7 @@ const getTinyUrl = async (req, res, next) => {
     tinyUrlService.updateTotalClicks(email);
     tinyUrlService.updateTinyUrlClicks(email, tinyUrl);
     // log new click into database
-    tinyUrlService.addNewClick(tinyUrl, email);
+    tinyUrlService.addNewClick(tinyUrl, email, originalUrl);
 
     // redirect to original url
     console.log("redirecting to: " + originalUrl);
@@ -58,13 +58,13 @@ const getTinyUrl = async (req, res, next) => {
   }
 };
 
-const getAllClicks = async (req, res) => {
-  const { email, pageNumber = 0, pageSize = 1 } = req.query;
+const getAllClicksOfUser = async (req, res) => {
+  const { email, pageNumber = 0, pageSize = 10 } = req.query;
   try {
-    const tinyClicks = await tinyUrlService.getAllClicks(
+    const tinyClicks = await tinyUrlService.getAllClicksOfUser(
       email,
       pageNumber,
-      pageSize
+      pageSize,
     );
     console.log("tinyClicks: " + tinyClicks);
     res.status(200).json(tinyClicks);
@@ -74,4 +74,17 @@ const getAllClicks = async (req, res) => {
   }
 };
 
-module.exports = { createTinyUrl, getTinyUrl, getAllClicks };
+const getAllClicksFromCassandra = async (req, res) => {
+  const {email} = req.query;
+  try {
+    const tinyClicks = await tinyUrlService.getAllClicksOfUserFromCassandra(email);
+    console.log("tinyClicks: " + tinyClicks);
+    res.status(200).json({clicks: tinyClicks});
+  }
+  catch (error) {
+    console.log("error" + error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createTinyUrl, getTinyUrl, getAllClicksOfUser,getAllClicksFromCassandra };
